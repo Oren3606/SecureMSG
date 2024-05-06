@@ -15,41 +15,48 @@ def decrypt():
 
 
 if __name__ == "__main__":
-    print(token_hex()[:32])
-    parser = ArgumentParser(prog="Secure.MSG", usage="secmsg MODE [OPTIONS] NAME",
-                            description="An encrypted console-based communication utility",
-                            argument_default='--help'
+    tk = token_hex()[:32]
+
+    parser = ArgumentParser(prog="Secure.MSG", usage="secmsg [start | connect HEX] [-name NAME]",
+                            description="A console-based encrypted communication utility"
                             )
 
-    parser.add_argument("mode", help="Mode of operation", type=str, choices=['connect', 'start'])
-    parser.add_argument("-name", help="Name to use for session", type=str, default="Anonymous", nargs=1)
-    parser.add_argument("-hash", help="Peer hash to connect to", type=str)
+    parser.add_argument("action", help="what to do", type=str, nargs='?')
+    parser.add_argument("target", help="connection target", type=str, nargs='?')
+    parser.add_argument("-name", help="Name to use for session. Default: Anonymous", type=str, default="Anonymous")
 
-    print(parser.parse_args())
+    args = parser.parse_args()
+
+    # If an action was not given
+    if not args.action:
+        parser.print_help()
+
+    # If start option was given with a target
+    if args.action == 'start' and args.target:
+        print('"start" action cannot be used with "target" option')
+
+    # If connect action was given with no target
+    if args.action == 'connect' and not args.target:
+        print('"connect" action requires usage of "target" option')
+
+    print("\n[DEBUG]: args -", args)
 
 '''
+examples for reference for self- 
 
-secmsg connect fehgerwg
+secmsg connect hex
 
+secmsg start
 
 notes for self on usage examples-
 "" - given command
 >> - console output
- 
---------------------------------
 
-"secmsg connect h458e9ff name tom"
+"secmsg connect 6682b11e079fc91f -name tom"
 >> now connecting...
 
 "secmsg listen name tom"
 >> hash generated:
->> h458e9ff
->> now listening for connections...
->> new connection: tom
-
-"secmsg listen name tom hash=h458e9ff" 
->> trying to use hash...
->> success:
 >> h458e9ff
 >> now listening for connections...
 >> new connection: tom
