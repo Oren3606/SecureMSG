@@ -26,7 +26,7 @@ if __name__ == "__main__":
     parser.add_argument("-name", help="Name to use for session. Default: Anonymous", type=str, default="Anonymous")
 
     args = parser.parse_args()
-
+    # todo only have one option- if no target specified then listen, otherwise connect
     # If an action was not given
     if not args.action:
         parser.print_help()
