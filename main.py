@@ -6,6 +6,14 @@ from secrets import token_hex
 from argparse import ArgumentParser
 
 
+def listen(name):
+    pass
+
+
+def establish(hx, name):
+    pass
+
+
 def encrypt():
     pass
 
@@ -15,49 +23,30 @@ def decrypt():
 
 
 if __name__ == "__main__":
-    tk = token_hex()[:32]
+    tk = token_hex()[:32]  # Example
 
-    parser = ArgumentParser(prog="Secure.MSG", usage="secmsg [start | connect HEX] [-name NAME]",
-                            description="A console-based encrypted communication utility"
+    parser = ArgumentParser(prog="Secure.MSG",
+                            usage="secmsg [--target <HEX>] [--name <USERNAME>]",
+                            description="A console-based encrypted communication utility.",
                             )
 
-    parser.add_argument("action", help="what to do", type=str, nargs='?')
-    parser.add_argument("target", help="connection target", type=str, nargs='?')
-    parser.add_argument("-name", help="Name to use for session. Default: Anonymous", type=str, default="Anonymous")
+    parser.add_argument("-t", "--target", help="Connection target hex. Multiple may be provided",
+                        type=str, action='append'
+                        )
+    parser.add_argument("-n", "--name", help="Name to use for session. Defaults to Anonymous <num>",
+                        type=str, default="Anonymous"
+                        )
 
     args = parser.parse_args()
-    # todo only have one option- if no target specified then listen, otherwise connect
-    # If an action was not given
-    if not args.action:
-        parser.print_help()
 
-    # If start option was given with a target
-    if args.action == 'start' and args.target:
-        print('"start" action cannot be used with "target" option')
+    # Target not provided
+    if not args.target:
+        print("\n[DEBUG]: listen mode")
+        listen(args.name)
+    # Target provided
+    else:
+        for target in args.target:
+            print("\n[DEBUG]: connect mode, connecting to ", target)
+            establish(target, args.name)
 
-    # If connect action was given with no target
-    if args.action == 'connect' and not args.target:
-        print('"connect" action requires usage of "target" option')
-
-    print("\n[DEBUG]: args -", args)
-
-'''
-examples for reference for self- 
-
-secmsg connect hex
-
-secmsg start
-
-notes for self on usage examples-
-"" - given command
->> - console output
-
-"secmsg connect 6682b11e079fc91f -name tom"
->> now connecting...
-
-"secmsg listen name tom"
->> hash generated:
->> h458e9ff
->> now listening for connections...
->> new connection: tom
-'''
+    print("[DEBUG]: args -", args)
