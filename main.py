@@ -4,14 +4,9 @@
 import socket
 from secrets import token_hex
 from argparse import ArgumentParser
+import initiator
 
-
-def listen(name):
-    pass
-
-
-def establish(hx, name):
-    pass
+# todo use cryptography lib?
 
 
 def encrypt():
@@ -23,8 +18,6 @@ def decrypt():
 
 
 if __name__ == "__main__":
-    tk = token_hex()[:32]  # Example
-
     parser = ArgumentParser(prog="Secure.MSG",
                             usage="secmsg [--target <HEX>] [--name <USERNAME>]",
                             description="A console-based encrypted communication utility.",
@@ -42,11 +35,11 @@ if __name__ == "__main__":
     # Target not provided
     if not args.target:
         print("\n[DEBUG]: listen mode")
-        listen(args.name)
+        ...
     # Target provided
     else:
         for target in args.target:
             print("\n[DEBUG]: connect mode, connecting to ", target)
-            establish(target, args.name)
+            ...
 
     print("[DEBUG]: args -", args)
